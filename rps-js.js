@@ -1,3 +1,14 @@
+
+/* Add event listeners to all buttons */
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    console.log('Button was clicked');
+  });
+});
+
+
+
 /* Function to get player's play */
 function getPlayerChoice() {
     const playerChoice = prompt("Pick Rock, Paper, or Scissors");
