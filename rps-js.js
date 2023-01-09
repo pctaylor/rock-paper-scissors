@@ -1,19 +1,55 @@
-
-/* Add event listeners to all buttons */
 const buttons = document.querySelectorAll('button');
+const humanScore = document.querySelector(".human-score");
+const compScore = document.querySelector(".computer-score");
+const result = document.querySelector(".result");
+
+/* Whenever a button is clicked, play a round of rock paper scissors */
 buttons.forEach(button => {
   button.addEventListener('click', () => {
-    console.log('Button was clicked');
+    playRound(button.className.toLowerCase(), getComputerChoice());
+    checkGameOver()
   });
 });
 
+// changing score
+function updateScore(score) {
+    
+    //Get the current value and add 1
+    let currentVal = parseInt(score.textContent, 10);
+    currentVal++
 
-
-/* Function to get player's play */
-function getPlayerChoice() {
-    const playerChoice = prompt("Pick Rock, Paper, or Scissors");
-    return playerChoice.toLowerCase();
+    //Update the score in the DOM
+    score.textContent = currentVal
 }
+
+
+// End Game when someone hits 5
+function checkGameOver() {
+    if (parseInt(humanScore.textContent) >= 5) {
+        result.textContent = "Game Over - You Win!";
+    }
+    else if (parseInt(compScore.textContent) >= 5) {
+        result.textContent = "Game Over - You Lose!";
+    }
+      // const gameOverDiv = document.createElement('div');
+      // gameOverDiv.textContent = 'Game Over';
+      // document.body.appendChild(gameOverDiv);
+  }
+
+// showing game result
+function updateResult(playerChoice, computerChoice, outcome) {
+    if (outcome === "win") {
+        result.innerHTML = "You won that round. <b>" + playerChoice + "</b> beats <b>" + computerChoice + "</b>.";
+    }
+    else if (outcome === "lost") {
+        result.innerHTML = "You lost that round. <b>" + playerChoice + "</b> loses to <b>" + computerChoice + "</b>.";
+    }
+    else if (outcome === "tie") {
+        result.textContent = "Tie round. Go again.";
+    }
+    
+}
+
 
 /* Function to make the computer's play */
 function getComputerChoice() {
@@ -23,50 +59,20 @@ function getComputerChoice() {
 }
 
 /* Round of rock paper scissors */
-function playRound(playerSelection, computerSelection) {
+function playRound(playerSelection) {
+    let computerSelection = getComputerChoice();
     if (playerSelection === computerSelection) {
-        return "Tie round... go again...";
-        return false
+        updateResult(playerSelection, computerSelection, "tie");
     }
-    else if (playerSelection === "rock" & computerSelection === "scissors") {
-        return "You Win! Rock beats Scissors!";
-    }
-    else if (playerSelection === "scissors" & computerSelection === "paper") {
-        return "You Win! Scissors beat Paper!";
-    }
-    else if (playerSelection ==="paper" & computerSelection === "rock") {
-        return "You Win! Paper beats Rock!";
-    }
+    else if ((playerSelection === "rock" & computerSelection === "scissors") 
+          || (playerSelection === "scissors" & computerSelection === "paper")
+          || (playerSelection ==="paper" & computerSelection === "rock")) {
+        updateResult(playerSelection, computerSelection, "win");
+        updateScore(humanScore);
+          }
     else {
-        return "You Lose! " + playerSelection + " is beaten by " + computerSelection + "!";
+        updateResult(playerSelection, computerSelection, "lost");
+        updateScore(compScore);
     }
 }
 
-/* Player and computer play same thing -> new round */
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        
-        let playerChoice = getPlayerChoice();
-        let result = playRound(playerChoice, getComputerChoice());
-        console.log(result);
-        
-        if (result.includes("Win")) {
-            playerScore += 1;
-        }
-        else if (result.includes("Lose")) {
-            computerScore += 1;
-        }
-        else {
-            i -= 1;
-        }
-     }
-
-     if(playerScore > computerScore) {
-        return "You Win!"
-     }
-     else {
-        return "You Lose!"
-     }
-}
